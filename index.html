@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Lesen B2-المال - Teil 1</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 1000px; margin: 30px auto; line-height: 1.6; background: #f4f4f4; color: #333; }
+h1 { text-align: center; color: #2c3e50; }
+.quiz-container { background: #FFE5B4; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+.question-text { margin-top: 10px; font-weight: bold; }
+button { display: block; margin: 5px 0; padding: 8px 12px; font-size: 14px; cursor: pointer; border-radius: 5px; border: none; background: #3498db; color: #fff; transition: 0.3s; text-align: right; white-space: pre-line; }
+button:hover:not(.disabled) { background: #2980b9; }
+button.disabled { background: #bdc3c7; cursor: default; }
+.correct { background-color: #2ecc71 !important; color: #fff !important; }
+.wrong { background-color: #e74c3c !important; color: #fff !important; }
+#show-result { margin-top: 20px; background: #2ecc71; color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+#result-container { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>Lesen B2 - المال - Teil 1</h1>
+
+<div id="quiz-area"></div>
+<button id="show-result">إظهار النتيجة والتصحيح</button>
+
+<div id="result-container">
+    <h2>نتيجتك</h2>
+    <p id="score"></p>
+</div>
+
+<script>
+const quiz = [
+    {
+        text: `Spardosen sind Sammelbehälter,Dekoration oder Kinderspielzeug - und zwar seit Jahrhunderten. Und obwohl bargeldloses Bezahlen immer mehr in Mode kommt, sind sie bis heute nicht
+aus den Kinderzimmern verschwunden.Das Spardosen-Museum im Haus Kemnade zeigt 1200 Exemplare aus dem Mittelalter bis zum 20. Jahrhundert. Daneben widmet sich das Museum der Geschichte des Geldes. In zwei Räumen sind Münzen, Scheine und weitere Tauschmittel aus der ganzen Welt ausgestellt. Die Sammlung
+von Spardosen reicht von schweren Gefäßen aus Eisen über kunstvoll verzierte Truhen und Kutschen bis zu Mickey-Mäusen aus Blech. "Um 1900 erlebten Spardosen einen Boom",
+erzählt Museumsleiter Jürgen Stollmann. In vielen Häusern hatten sie zwar nur als hübsche Dekoration hergehalten, doch immer seien sie auch ein Spiegel der Gesellschaft.
+Zehn Jahre später schon gibt es das Museum, das interessante Einblicke in die Geldgeschichte bietet. Jährlich lockt es über 13.000 Besucher an.`,
+        options: [
+            "a) Ausstellung über Finanzmetropole",
+            "b) Fachinformationen für Finanzprofis",
+            "c) Finanz-ABC für Anfänger",
+            "d) Interessante Tätigkeit wichtiger als hohes Gehalt",
+            "e) Lehrreicher Rundgang zu Finanzwissen",
+            "f) Sammelgefäße als Ausstellungsobjekte",
+            "g) Sparbüchsen - Nun wieder in Mode",
+            "h) Vertrauen zeigt sich auf dem Konto",
+            "i) Wie Kinder den Umgang mit Geld lernen",
+            "j) Wie man Kinder zum Sparen motiviert"
+        ],
+        answer: 5
+    },
+    {
+        text: `Wer beim leisen Klirren von Geldstücken ein prickelndes Gefühl verspürt, ist in der neuen Sonderausstellung
+"Die Sprache des Geldes" im Berliner Museum für Kommunikation richtig. Auf ungewöhnliche Weise nähert
+sich diese kleine Schau dem Geld als Dreh- und Angelpunkt einer globalisierten Welt. Im Museum machen die
+Besucher auf 450 Quadratmetern eine Tour durch eine fiktive Stadt: Auf dem "Marktplatz" erfahren sie,
+warum sich zuerst Münzen und viel später Scheine als Zahlungsmittel durchsetzen. Bei den Stationen "Bank"
+und "Börse" lernen sie das Prinzip kennen, das in guten Zeiten dahintersteht: Vertrauen in den Wert des
+Geldes. In der Station "Einkaufszentrum" geht es dagegen um die heutige Konsumgesellschaft. Entlohnt
+werden die Besucher für ihren Ausstellungsbesuch natürlich auch. Wer sein neues Wissen in einem
+Computerquiz nachweisen kann, erhält einen Spielgeld-Schein mit dem eigenen Konterfei. Macht Geld denn
+nun glücklich? "Nur für einen kurzen Moment", versichert Kurator Gregor Isenbrot. "Wenn der Rausch vorbei
+ist, will der Mensch noch mehr. Und zwar mehr Geld".`,
+        options: [
+           "a) Ausstellung über Finanzmetropole",
+            "b) Fachinformationen für Finanzprofis",
+            "c) Finanz-ABC für Anfänger",
+            "d) Interessante Tätigkeit wichtiger als hohes Gehalt",
+            "e) Lehrreicher Rundgang zu Finanzwissen",
+            "f) Sammelgefäße als Ausstellungsobjekte",
+            "g) Sparbüchsen - Nun wieder in Mode",
+            "h) Vertrauen zeigt sich auf dem Konto",
+            "i) Wie Kinder den Umgang mit Geld lernen",
+            "j) Wie man Kinder zum Sparen motiviert"
+        ],
+        answer: 4
+    },
+    {
+        text: `Versteh' ich ja doch nicht; ist mir zu kompliziert". So oder ähnlich lauten die üblichen Vorbehalte, wenn es
+darum geht, zu begreifen, wie Wirtschaft funktioniert und der Finanzsektor arbeitet. Der englische
+Journalist John Lanchester nimmt alle jene neugierigen Laien, denen die Fachsprache rund ums Geld
+bislang verwirrend erschien, bei der Hand. So schildert er in seinem Buch "Die Sprache des Geldes und
+warum wir sie nicht verstehen", wie er sich als Außenseiter dem Thema genähert hat. Geld habe eine
+eigene Sprache, erklärt Lanchester. Wer diese nicht lerne, könne nicht mitreden. Und so erläutert er im
+ersten Teil seines Buches die Besonderheiten dieser Sprache. Den zweiten Teil bildet ein alphabetisches
+Glossar, in dem Fachwörter und Namen in kurzen Artikeln erläutert werden. Anschaulich erklärt
+Lanchester etwa, was Derivate sind und wie man antizyklisch handelt. Das Buch ist anekdotenreich und
+gut lesbar, seine Lektüre zu empfehlen. Denn Lanchester ermöglicht es dem interessierten
+Wirtschaftslaien, mitreden zu können.`,
+        options: [
+           "a) Ausstellung über Finanzmetropole",
+            "b) Fachinformationen für Finanzprofis",
+            "c) Finanz-ABC für Anfänger",
+            "d) Interessante Tätigkeit wichtiger als hohes Gehalt",
+            "e) Lehrreicher Rundgang zu Finanzwissen",
+            "f) Sammelgefäße als Ausstellungsobjekte",
+            "g) Sparbüchsen - Nun wieder in Mode",
+            "h) Vertrauen zeigt sich auf dem Konto",
+            "i) Wie Kinder den Umgang mit Geld lernen",
+            "j) Wie man Kinder zum Sparen motiviert"
+        ],
+        answer: 2
+    },
+    {
+        text: `Eine neue Untersuchung des Instituts der deutschen Wirtschaft bestätigt eine Tatsache,
+über die sich Sozialwissenschaftler und Psychologen schon lange einig sind: Die Höhe des
+Einkommens allein macht nicht glücklich. Wie zufrieden ein Arbeitnehmer ist, hängt
+demnach nicht in erster Linie vom Lohn oder der Tätigkeit ab, sonder davon, wie
+emotional stabil, belastbar und selbstsicher er ist. Für die Studie hat die Ökonomin Mara
+Ewers die Zusammenhänge zwischen der Lebens- und Arbeitszufriedenheit, dem
+Bruttostundenlohn, der Anzahl der Bildungsjahre und dem Gesundheitszustand
+untersucht. Sie fand heraus, dass 53 Prozent der Bundesbürger, die sich emotional als
+besonders stabil bezeichnen, auch im Job sehr zufrieden sind. Die Fähigkeit, anderen
+Menschen zu vertrauen, steigere die Lebens- und Arbeitszufriedenheit. Die Untersuchung
+lege die These nahe, dass Einkommensunterschiede auch eine Folge der
+Persönlichkeitsentwicklung sein können, so Ewers. Wer misstrauisch sei, verwende mehr
+Zeit und Kraft für Kontrollen und sei daher weniger produktiv, sagt sie. Und wer weniger
+produktiv sei, verdiene auf Dauer auch weniger.`,
+        options: [
+            "a) Ausstellung über Finanzmetropole",
+            "b) Fachinformationen für Finanzprofis",
+            "c) Finanz-ABC für Anfänger",
+            "d) Interessante Tätigkeit wichtiger als hohes Gehalt",
+            "e) Lehrreicher Rundgang zu Finanzwissen",
+            "f) Sammelgefäße als Ausstellungsobjekte",
+            "g) Sparbüchsen - Nun wieder in Mode",
+            "h) Vertrauen zeigt sich auf dem Konto",
+            "i) Wie Kinder den Umgang mit Geld lernen",
+            "j) Wie man Kinder zum Sparen motiviert"
+        ],
+        answer: 7
+    },
+    {
+        text: `Über Geld sprechen viele Deutsche nicht gerne - selbst Verwandte oder Lebenspartner
+haben oft keine Ahnung, was sich auf den Konten ihrer Nächsten tut. Dabei spielt Geld
+bei den meisten Entscheidungen eine wichtige Rolle, und zwar auch in der Familie. Es ist
+heutzutage zum Glück üblich, dass Kinder spielerisch ein Gefühl für Geld entwickeln: Zwei
+Drittel der Vier- bis Fünfjährigen bekommen mittlerweile Taschengeld. Doch die Offenheit
+von Eltern sollte noch weiter gehen: Denn die Erziehung prägt entscheidend das spätere
+Verhältnis der Kinder zu Geld, wie Studien belegen.
+Vorteilhaftes Finanzverhalten nennen Forscher das und setzen es mit der Fähigkeit gleich,
+Gled sinnvoll einzuteilen oder zu sparen. Natürlich ist das Thema Geld für Eltern ein
+Balanceakt. Doch letztlich lohnt sich der Mut zu Vertrauen und wohldosierter Offenheit,
+denn wo Offenheit herrscht, kann Verständnis wachsen. Vielleicht sieht dann auch ein
+Elfjähriger ein, dass die Spielekonsole für viele hundert Euro zwar toll, aber trotzdem
+nicht nötig ist.`,
+        options: [
+            "a) Ausstellung über Finanzmetropole",
+            "b) Fachinformationen für Finanzprofis",
+            "c) Finanz-ABC für Anfänger",
+            "d) Interessante Tätigkeit wichtiger als hohes Gehalt",
+            "e) Lehrreicher Rundgang zu Finanzwissen",
+            "f) Sammelgefäße als Ausstellungsobjekte",
+            "g) Sparbüchsen - Nun wieder in Mode",
+            "h) Vertrauen zeigt sich auf dem Konto",
+            "i) Wie Kinder den Umgang mit Geld lernen",
+            "j) Wie man Kinder zum Sparen motiviert"
+        ],
+        answer: 8
+    }
+];
+
+const quizArea = document.getElementById("quiz-area");
+let userAnswers = Array(quiz.length).fill(null);
+
+quiz.forEach((teil, index) => {
+    const container = document.createElement("div");
+    container.className = "quiz-container";
+
+    const textEl = document.createElement("p");
+    textEl.innerText = teil.text;
+    container.appendChild(textEl);
+
+    teil.options.forEach((opt, oIndex) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = (e) => {
+            const allBtns = e.target.parentElement.querySelectorAll("button");
+            allBtns.forEach(b => {
+                b.classList.remove("disabled");
+                b.disabled = false;
+            });
+
+            userAnswers[index] = oIndex;
+            e.target.classList.add("disabled");
+            e.target.disabled = true;
+        };
+        container.appendChild(btn);
+    });
+
+    quizArea.appendChild(container);
+});
+
+document.getElementById("show-result").onclick = () => {
+    let score = 0;
+    quiz.forEach((teil, index) => {
+        const correct = teil.answer;
+        const selected = userAnswers[index];
+        const container = quizArea.children[index];
+        const buttons = container.querySelectorAll("button");
+
+        buttons.forEach((btn, oIndex) => {
+            btn.disabled = true;
+            if(oIndex === correct) btn.classList.add("correct");
+            if(selected === oIndex && selected !== correct) btn.classList.add("wrong");
+        });
+
+        if(selected === correct) score++;
+    });
+
+    document.getElementById("score").innerText = `النقاط: ${score*5} / 25`;
+    document.getElementById("result-container").style.display = "block";
+};
+</script>
+</body>
+</html>
+<h1>Lesen B2 - المال - Teil 2</h1>
+
+<div class="quiz-container">
+    <p>
+        Wer parkt, muss zahlen<br>
+Es geschah am 1. Januar 1954. In Duisburg, einer Großstadt am Rhein zwischen Köln und der
+niederländischen Grenze am Rande des Ruhrgebiets, gab es für die Autofahrer, die in der Straße
+“Am Buchenbaum” ihre Autos parken wollten, eine Überraschung. 20 etwa 1,5 Meter hohe
+Metallstangen mit uhrenförmigen Aufsätzen standen am Straßenrand mit der
+unmissverständlichen Aufschrift: “Einwurf 10 Pfennig für eine Stunde”. Die ersten Parkuhren in
+Deutschland waren aufgestellt.
+Nur Basel in der Schweiz und Stockholm in Schweden hatten vor Duisburg Parkuhren installiert,
+um Dauerparker aus den Stadtzentren zu vertreiben. Das eingenommene Geld wurde in Duisburg
+anfangs für gemeinnützige Zwecke ausgegeben: für Alte, Kranke Kriegsversehrte, für elternlose
+Kinder. Und die Stadtverwaltung war sich sicher, dass die Autofahrer Verständnis für die
+Parkuhren aufbringen würden, dienten sie doch einem guten Zweck.
+Doch bei den Autofahrenn war man nicht so erfreut über diese neuen Apparate. “Groschengrab”
+wurden sie dann auch bald überall genannt: ein Apparat, in den man Groschen - wie die
+10-Pfennig-Stücke damals genannt wurden - hineinwarf. Dieser schluckte zwar gnadenlos
+Zehner, gab aber zum Verdruss vieler trotzdem oft keine Parkzeit frei. Tat er dies, dann aber in
+der Regel nur für höchstens 60 Minuten. Viele Autofahrer waren außerdem verärgert, weil sie
+immer passendes Kleingeld dabei haben mussten. Die ersten Parkuhren konnten nämlich nicht
+wechseln.
+    </p>
+
+    <!-- سؤال 1 -->
+    <p class="question-text">1) Die ersten Parkuhren Europas standen</p>
+    <button data-correct="false">a) in der Schweiz und in Deutschland.</button>
+    <button data-correct="true">b) in der Schweiz und in Schweden.</button>
+    <button data-correct="false">c) in Deutschland und in Schweden.</button>
+
+    <!-- سؤال 1 -->
+    <p class="question-text">1) Die ersten Parkuhren Europas standen معدل</p>
+    <button data-correct="false">a) in Basel und in Duisburg.</button>
+    <button data-correct="true">b) in der Schweiz und in Schweden.</button>
+    <button data-correct="false">c) in Deutschland und in Schweden.</button>
+
+
+    <!-- سؤال 2 -->
+    <p class="question-text">2) Früher wurden in Duisburg die Parkgebühren verwendet, um</p>
+    <button data-correct="true">a) Bedürftige zu unterstützen.</button>
+    <button data-correct="false">b) Dauerparker aus den Stadtzentren zu vertreiben.</button>
+    <button data-correct="false">c) Löcher im städtischen Haushalt zu stopfen.</button>
+
+    <!-- سؤال 3 -->
+    <p class="question-text">3)Die ersten Parkuhren.</p>
+    <button data-correct="false">a) funktionierten problemlos.</button>
+    <button data-correct="false">b) gaben nur Groschen zurück.</button>
+    <button data-correct="true">c) könnten nur Münzen annehmen.</button>
+
+   <!-- سؤال 3 -->
+    <p class="question-text">3)Die ersten Parkuhren.معدل</p>
+    <button data-correct="false">a) bezeichnete man als "Knöllchen".</button>
+    <button data-correct="true">b) funktionierten nur mit Münzen.</button>
+    <button data-correct="false">c) gaben oft falsche Beträge zurück.</button>
+
+    <!-- سؤال 4 -->
+    <p class="question-text">4) Die neuen Parkscheinautomaten.</p>
+    <button data-correct="false">a) funktionieren nur bargeldlos.</button>
+    <button data-correct="false">b) geben kein Wechselgeld zurück.</button>
+    <button data-correct="true">c) sind flexibel im Hinblick auf die Art der Bezahlung.</button>
+
+    <!-- سؤال 4 -->
+    <p class="question-text">4) Die neuen Parkscheinautomaten.معدل</p>
+    <button data-correct="false">a) akzeptieren nur Karten als Zahlungsmittel.</button>
+    <button data-correct="false">b) müssen mit hohem Aufwand gewartet werden.</button>
+    <button data-correct="true">c) versorgen sich selbst mit Strom.</button>
+
+    <!-- سؤال 5 -->
+    <p class="question-text">5) In Berlin und in Düsseldorf</p>
+    <button data-correct="false">a) fließen die Parkgebühren nur in den Straßenbau.</button>
+    <button data-correct="false">b) nimmt die Zahl der Parkscheinautomaten zu.</button>
+    <button data-correct="true">c) werden die höchsten Parkgebühren verlangt.</button>
+
+    <p class="feedback"></p>
+</div>
+
+<!-- زر النتيجة النهائية -->
+<div style="background:#fff;padding:20px;margin-top:20px;border-radius:8px;">
+    <button id="show-result-2">إظهار النتيجة النهائية للتمرين 2</button>
+    <p id="score-2" style="font-weight:bold;"></p>
+</div>
+
+<script>
+document.querySelectorAll(".quiz-container").forEach(container => {
+    container.querySelectorAll("button[data-correct]").forEach(btn => {
+        btn.onclick = () => {
+            const siblings = btn.parentElement.querySelectorAll("button[data-correct]");
+            siblings.forEach(s => s.classList.remove("selected"));
+            btn.classList.add("selected");
+        };
+    });
+});
+
+document.getElementById("show-result-2").onclick = function() {
+    const correctButtons = document.querySelectorAll('.quiz-container button[data-correct="true"]');
+    const allButtons = document.querySelectorAll('.quiz-container button[data-correct]');
+    let score = 0;
+
+    correctButtons.forEach(btn => {
+        if (btn.classList.contains("selected")) {
+            score++;
+        }
+    });
+
+    allButtons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.dataset.correct === "true") {
+            btn.style.backgroundColor = "lightgreen";
+        } else if (btn.classList.contains("selected") && btn.dataset.correct === "false") {
+            btn.style.backgroundColor = "#ff7f7f";
+        }
+    });
+
+    const total = correctButtons.length;
+    document.getElementById("score-2").textContent = `النقاط: ${score * 5} / ${total * 5}`;
+};
+</script>
+
+<div id="quiz-area-3"></div>
+</div>
+<body>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Lesen B2 - المال - Teil 3</title>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background-color: #f5f5f5; }
+h1 { text-align: center; margin-bottom: 20px; }
+.question { background-color: #ffe0b2; padding: 15px; margin-bottom: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.question p { margin-bottom: 10px; }
+.question label { display: block; margin-bottom: 5px; cursor: pointer; background-color: #fff; padding: 5px; border-radius: 3px; }
+.question label.selected { background-color: #ddd; }
+.question label.correct { background-color: #c8e6c9; }
+.question label.incorrect { background-color: #ffcdd2; }
+button { padding: 10px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; background-color: #2196F3; color: #fff; }
+button:hover { background-color: #1976D2; }
+#result-container { margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: none; }
+</style>
+</head>
+<body>
+
+<h1>Lesen B2 - المال - Teil 3</h1>
+
+<div id="quiz-area">
+
+<!-- Question 1 -->
+<div class="question" data-correct="4">
+  <h3>Text 1: </h3>
+  <p>Die "Gärten der Welt" sind zehn Themengärten, die im Erholungspark Marzahn angelegt sind.
+Auf 43 Hektar laden sie zu einer Reise durch verschiedene Teile der Welt und Epochen ein: Zu
+besichtigen sind chinesische, japanische, europäische und auch orientalische Gartenkunst.
+Brücken, Brunnen, Pavillons und Gebäude wie ein chinesisches Teehaus zeigen die Bautradition
+der verschiedenen Gartenkulturen. Über das Parkgelände verteilen sich Wiesen, Blumenbeete,
+Spiel- und Liegewiesen.</p>
+
+  <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 2 -->
+<div class="question" data-correct="10">
+<h3>Text 2:</h3>
+<p>Nach rechts, nach links oder geradeaus? Der in einer idyllischen Landschaft gelegene Irrgarten
+in Vilpian lädt Groß und Klein, Jung und Alt ein, sich auf die Suche nach dem richtigen Weg zu
+begeben. Kinder und Erwachsene irren durch zahlreiche Gänge und Sackgassen zwischen
+hohen Hecken. Und nicht alle Wege führen zum Aussichtsturm in der Mitte. Doch bisher hat
+noch jeder hinausgefunden.
+Mit einer Weglänge von 4 km bietet das Labyrinth Spannung und Nervenkitzel auch für
+Erwachsene. Ein Freizeitspaß für die ganze Familie.</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+<!-- Question 3 -->
+<div class="question" data-correct="8">
+<h3>Text 3: </h3>
+<p>In unseren Ausstellungsräumen am Plantanenhof bieten wir an jedem ersten Samstag im Monat jungen
+Künstlerinnen und Künstlern die Möglichkeit, sich und einige ihrer Werke vorzustellen. Wenn Sie an einer
+Ausstellung interessiert sind, melden Sie sich bitte spätestens sechs Wochen vor dem gewünschten Termin
+bei uns an. Aber auch Besucher sind herzlich willkommen! Gegen einen geringen Eintritt erwartet Sie nicht
+nur neue Kunst, auch Kaffee und Tee werden serviert und natürlich haben Sie auch die Gelegenheit, ein
+Werk gleich zu kaufen und mitzunehmen. Weitere Informationen und Anmeldung unter: www.galeria.de</p>
+<label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+<!-- Question 4 -->
+<div class="question" data-correct="9">
+<h3>Text 4: Palmen in der Großstadt</h3>
+<p> Für viele ist die eigene Wohnung ein Traum – aber es gibt auch Fragen und Probleme. Wir bieten extra für
+alle, die zum ersten Mal die eigenen vier Wände beziehen, Infoabende an, in denen sie alles Wichtige zur
+Haushaltsführung erfahren: Wie bewahrt man Lebensmittel richtig auf? Wie viele Vorräte braucht man? Wie
+putzt man richtig und welches Mittel ist am besten geeignet? Wie spart man Strom und Heizkosten?
+Erfahren Sie alles, was wichtig ist, von Omas Spar-Rezepten bis hin zu moderner Küchentechnik. Die
+Teilnahme ist kostenlos, um Anmeldung wird aber gebeten. AWO Kirchhellen. Tel. 0800 / 61619012</p>
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 5 -->
+<div class="question" data-correct="3">
+<h3>Text 5: </h3>
+<p>Baden und Schwimmen ist nicht nur gesund, sondern bereitet Kindern und Erwachsenen viel Freude!
+Und das nicht erst seit gestern: Schon im Mittelalter kannte man Badestuben oder erfrischte sich bei
+einem Flussbad im Main. Badehäuser und Schwimmbäder gehören zum Stadtbild und legen Zeugnis ab
+von der Kultur und Architektur ihrer Epoche.
+Die kulturhistorische Ausstellung "Badekultur in Frankfurt" zeigt anhand vieler Fotos, Abbildungen und
+Karten die lange Tradition des Badewesens in der Stadt. Sie ist noch bis September im ehemaligen
+Karmeliterkloster zu besichtigen.</p>
+<label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 7 -->
+<div class="question" data-correct="7">
+<h3>Text 6: </h3>
+<p>Erholung vom Alltagsstress und Ruhe findet man im Garten, bei der Arbeit an der frischen Luft. Doch seit
+Jahrhunderten beflügeln Gärten auch die Phantasie der Maler und lassen diese zwar nicht zum Spaten,
+aber doch zum Pinsel greifen. Die Ausstellung "Gartenglück" widmet sich Gartenbildern: Die Kuratoren
+haben über 100 herausragende Gemälde und Zeichnungen aus
+Museen und Privatsammlungen zusammengetragen. Zu sehen sind Exponate vom Mittelalter bis zur
+Gegenwart. Diese zeigen, welche Bedeutung dieser idyllische Ort für Künstler hatte: In ihren Werken
+halten sie die Schönheit der vom Menschen gestalteten Natur fest.</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 8 -->
+<!-- Text 7 -->
+<div class="question" data-correct="0">
+<h3>Text 7:Blumenaquarelle</h3>
+<p>Blumen gehören in der Malerei zu den beliebtesten Motiven. Sie faszinieren durch ihre Farben, zieren
+Fensterbänke und Balkons, finden sich auch in der Großstadt in Parkanlagen. Wir haben sie zwar
+immer vor Augen, doch es ist nicht leicht, sie bildlich festzuhalten. In diesem Kurs lernen Sie, wie Ihnen
+dies gelingt: Sie erfahren, wie man Blumen und Blüten detailgetreu und lebendig farbig darstellen kann.
+Grundkenntnisse zu Aquarellmaltechniken und Erfahrung in der Aquarellmalerei sind für die Teilnahme
+notwendig</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 9 -->
+<div class="question" data-correct="2">
+<h3>Text 8: Meisterwerke der Gartenarchitektur</h3>
+<p>Gärten sind Paradiese von Menschenhand: Natur und Architektur werden eins. Von den Gärten der Antike
+ausgehend, präsentiert dieser Bildband große historische Gartentypen, darunter den italienischen,
+französischen und englischen Garten ebenso wie die Wunderwelt des chinesischen Gartens sowie die
+japanische Gartenkunst. Spektakuläre Fotografien erlauben auch Einblicke in kleine private Gärten und
+verborgene königliche Hofgärten. Den Abschluss bilden Gärten der Moderne.</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+<!-- Question 9 -->
+<div class="question" data-correct="6">
+<h3>Text 9: </h3>
+<p>Einen Garten ganz nach den eigenen Vorstellungen anlegen, Gemüse anbauen, die Schönheit von
+Blumen und Ziersträuchern genießen: Das wünschen sich viele Hobbygärtner. Das Buch "Gartenbau
+heute" gibt Anfängern wie auch erfahrenen Gärtnern wertwolle Anleitungen zur praktischen Umsetzung.
+Es enthält zahlreiche Beispiele, umfangreiches Bildmaterial sowie graphische Darstellungen. Der Autor
+ist Gartenbau-Ingenieur und erklärt alles über Gartenstile, die Planung und den Entwurf eines Gartens
+bis hin zur Bepflanzung. Außerdem werden Hinweise zur modernen Gartenarchitektur gegeben. </p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 9 -->
+<div class="question" data-correct="0">
+<h3>Text 10: </h3>
+<p>Im Kletterwald Höhr-Grenzhausen erwartet Kletterfreunde ein Abenteuer der besonderen Art. Fünf
+Routen mit unterschiedlichen Schwierigkeitsgraden führen in bis zu 18 m Höhe. Erwachsene und
+Jugendliche ab 14 Jahren finden hier eine spannende Herausforderung in einer Welt aus Seilen, Brücken,
+Rutschen und Plattformen, und das alles inmitten einer traumhaften Waldkulisse. In unserem Seilpark
+erwarten Sie Unterhaltung, Bewegung in der freien Natur und vieles mehr. Klettererfahrung ist nicht
+notwendig. Die Kletterausrüstung wird gestellt und Sie werden von einem professionellen Trainier
+begleitet.</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+
+<!-- Question 10 -->
+<div class="question" data-correct="0">
+<h3>Text 11: </h3>
+<p>Wer flattert denn da in meinem Garten herum? Vögel zu beobachten macht vielen Hobby-Gärtnern
+große Freude. In dem Ratgeber "Gefiederte Gäste im Garten" finden Sie ausführliche Porträts der
+verschiedenen Arten und zahlreiche nützliche Ratschläge. Außerdem erfahren Sie, wie Sie Gartenvögel
+durch Nistkästen, Futter, das Schaffen von Trink- und Badeplätzen unterstützen und sie vor Gefahren
+schützen können. Das Buch informiert auch über typische Verhaltensweisen der Vögel und liefert
+faszinierende Einblicke in die heimische Vogelwelt.</p>
+
+ <label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- Question 12 -->
+<div class="question" data-correct="0">
+<h3>Text 12: </h3>
+<p>Der Botanische Garten in Koblenz bildet seit vielen Jahren erfolgreich Gärtner aus. Zu den zahlreichen
+Vorteilen, die dieser Ausbildungsplatz zu bieten hat, gehört die Vielfalt seltener Pflanzenarten, die die
+Auszubildenden dort entdecken und studieren können. Außerdem arbeiten sie in einem Team aus
+erfahrenen Gärtnern, die ihnen beratend zur Seite stehen. Voraussetzung für die Ausbildung ist ein
+Realschulabschluss. Die Ausbildung dauert in der Regel drei Jahre. Da die meisten Arbeiten im Freien
+erfolgen, sind körperliche Fitness und Freude an körperlicher Betätigung ebenfalls Voraussetzung für
+diese Tätigkeit.</p>
+
+<label><input type="radio" name="q1" value="0"> Keine Antwort</label>
+  <label><input type="radio" name="q1" value="1">Ein Bekannter hat Gartenbau studiert und sucht eine Stelle als Gartenbau-Ingenieur in einem
+Botanischen Garten..</label>
+  <label><input type="radio" name="q1" value="2"> Ein Kollege sammelt Bücher über Gartengestaltung in unterschiedlichen Ländern und Epochen.</label>
+  <label><input type="radio" name="q1" value="3"> Eine Kollegin interessiert sich für Kultur- und Stadtgeschichte.</label>
+  <label><input type="radio" name="q1" value="4"> Ihr Nachbar beschäftigt sich gerne mit Architektur. Er möchte an einem freien Nachmittag
+spazierengehen und dabei interessante Bauwerke ansehen.</label>
+  <label><input type="radio" name="q1" value="5"> Ihr Onkel möchte auf einer Weltreise berühmte Park- und Gartenanlagen besichtigen.</label>
+  <label><input type="radio" name="q1" value="6"> Ihre Mutter möchte den Garten neu gestalten und sucht Tipps aus der Praxis.</label>
+  <label><input type="radio" name="q1" value="7"> Ihre Nichte studiert Kunst und möchte sich Bilder mit Naturmotiven ansehen.</label>
+  <label><input type="radio" name="q1" value="8"> Ihre Schwester sucht einen Garten, in dem sie sich von ihrem anstrengenden Beruf erholen kann.</label>
+  <label><input type="radio" name="q1" value="9"> Ihre Tante möchte exotische Vögel beobachten.</label>
+  <label><input type="radio" name="q1" value="10"> Sie möchten mit Ihrem zehnjährigen Sohn in der freien Natur einen abenteuerlichen und
+unterhaltsamen Nachmittag verbringen.</label>
+</div>
+
+<!-- باقي الصفحة كاملة -->
+
+<button id="checkAnswers">Ergebnisse anzeigen</button>
+
+<script>
+document.getElementById("checkAnswers").addEventListener("click", function() {
+  const questions = document.querySelectorAll(".question");
+
+  questions.forEach(q => {
+    const correctValue = q.dataset.correct;
+    const inputs = q.querySelectorAll("input[type='radio']");
+
+    inputs.forEach(input => {
+      const label = input.parentElement;
+      label.style.backgroundColor = ""; // نحيد أي لون قديم
+
+      // ✅ إذا الجواب هو الصحيح، نوليه أخضر (سواء اختار المستخدم أو لا)
+      if (input.value === correctValue) {
+        label.style.backgroundColor = "lightgreen";
+      }
+
+      // ❌ إذا المستخدم اختار جواب خاطئ، نوليه أحمر
+      if (input.checked && input.value !== correctValue) {
+        label.style.backgroundColor = "lightcoral";
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
